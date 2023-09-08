@@ -1,27 +1,15 @@
 
-const handlersPost =({axios}) =>({
+const postHandlers =({axios}) =>({
 
-    get:async (req,res) =>{
-        const {data} = await axios.get('https://jsonplaceholder.typicode.com/users')
-        res.status(200).send(data)
-    },
     post:async (req,res) =>{
-        const {body} = req 
-        const {data} = await axios.post('https://jsonplaceholder.typicode.com/users',body)    
-        res.status(201).send(data)
-    },
-    put:async (req,res) =>{
-        const {body} = req 
-        const {id} =req.params
-        const {data} = await axios.put(`https://jsonplaceholder.typicode.com/users/${id}`,body)
-        res.sendStatus(204)
-    },
-    delete:async (req,res) =>{
-    
-        const {id} =req.params
-        await axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`)
-        res.sendStatus(204)
-    }
+        const {data:users}=await axios.get ('https://jsonplaceholder.typicode.com/users')
+        const found =users.find(x => x.id === req.body.userId)
+        if(found){
+        const {data} =await axios.post('https://jsonplaceholder.typicode.com/posts',req.body)
+         return res.status(201).send(data)
+        }
+        res.sendStatus(500)
+    },  
 })
 
-module.exports=handlersPost
+module.exports=postHandlers
